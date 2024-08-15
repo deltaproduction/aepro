@@ -1,0 +1,28 @@
+.new-particip_form__back {
+    display: flex;
+    justify-content: center;
+    margin: 100px;
+}
+
+.new-particip_form__block {
+    padding: 18px 38px;
+    border: 1px solid lightgrey;
+    box-shadow: 0 29px 136px #e5e5e5;
+}
+
+.level {
+    background: #e5e5e5;
+    padding: 5px 10px;
+    text-wrap: nowrap;
+    border-radius: 5px;
+    font-size: .9em;
+    text-shadow: 1px 1px 0px white;
+}
+
+span.contest-code {
+    font-weight: 300;
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+    font-size: 1.2em;
+}

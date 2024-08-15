@@ -1,0 +1,27 @@
+{
+    "inter": {
+        "normal": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_normal_4f95092608a03c140dccd33606c19f31",
+        "100": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_100_e28ff0ba5d2b1a0d9870187024e25b42",
+        "200": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_200_41f0a41abc8b62e51f17b943bd70d428",
+        "300": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_300_e4c9b64172e62d24ee5f222199ce2d2c",
+        "500": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_500_3f435dc727a887d3a9c0ddd0afecf691",
+        "600": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_600_9bfe13c942a9c8fb0ff92d25ab822ed4",
+        "bold": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_bold_8e796d6a87340143ae66c4104836364f",
+        "800": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_800_1f24dcc117b8d8932c4dfdec9bc3668b",
+        "900": "inter_900_142a98341c04a09a1eaffe623d19a992"
+    },
+    "open sans": {
+        "300_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_300_italic_945d8dd4a3efccc1bb28c16b6242db51",
+        "italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_italic_877b1c2661afb6fd8801d8d676e92166",
+        "500_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_500_italic_6553c22d1e76c3d4440f64b48805fc7c",
+        "600_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_600_italic_38650afefae818658a58a3f734c27327",
+        "bold_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_bold_italic_f909b48de15edc7e40c0cecc141c2730",
+        "800_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_800_italic_0a4825527362f06dbcf6601f5ab55f61",
+        "300": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_300_8513b9024ad211a10e857eba11f0f357",
+        "normal": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_normal_2bf6e8a03908d49a7fa7b1094b0c2804",
+        "500": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_500_663f11545dfeea65b44b2da12b5a66b1",
+        "600": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_600_94288badef373364367fbfb769e688ce",
+        "bold": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_bold_0e7196744e416eea97ecd5b9781a44c2",
+        "800": "open_sans_800_32706e64358098f2a0ad457efc8e0229"
+    }
+}
