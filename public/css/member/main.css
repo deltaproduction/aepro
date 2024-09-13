@@ -1,0 +1,33 @@
+@import url("../download.css");
+
+.contest-code {
+    display: flex;
+    align-items: center;
+}
+
+.contest-code .letter {
+    font-size: 1.7em;
+    font-weight: 300;
+    border: 1px solid #bebebe;
+    border-right: 0;
+    width: 25px;
+    text-align: center;
+}
+
+.contest-code .letter:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.contest-code .letter:last-child {
+    border-right: 1px solid #bebebe;
+    border-radius: 0 5px 5px 0;
+}
+
+.info .side {
+    display: flex;
+    gap: 60px;
+}
+
+.info a {
+    text-decoration: none;
+}

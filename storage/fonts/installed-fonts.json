@@ -8,7 +8,16 @@
         "600": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_600_9bfe13c942a9c8fb0ff92d25ab822ed4",
         "bold": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_bold_8e796d6a87340143ae66c4104836364f",
         "800": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_800_1f24dcc117b8d8932c4dfdec9bc3668b",
-        "900": "inter_900_142a98341c04a09a1eaffe623d19a992"
+        "900": "inter_900_142a98341c04a09a1eaffe623d19a992",
+        "100_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_100_italic_61b0101814be92c5b313d724c804305d",
+        "200_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_200_italic_1f34f274628874e025ffef8b0515adf3",
+        "300_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_300_italic_c94dd721f137ca10d717a99e77e28de9",
+        "italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_italic_819c0860953d4025ec322658004e9b31",
+        "500_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_500_italic_582a90e74bc2ab0e729ef07a60aef624",
+        "600_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_600_italic_fcb64cba359e7f8600e099d0d9e52915",
+        "bold_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_bold_italic_b196ee153480c9f3ed400e26e73a63f2",
+        "800_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_800_italic_3d05b5fd55ff4d62e32531351fa8b2b3",
+        "900_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/inter_900_italic_5c53b9688b1b37f9d90e405b0ddd7221"
     },
     "open sans": {
         "300_italic": "\/Applications\/MAMP\/htdocs\/ae\/storage\/fonts\/open_sans_300_italic_945d8dd4a3efccc1bb28c16b6242db51",

@@ -4,6 +4,10 @@
 
 @section('mw-title', 'Новая аудитория')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/creator/place.css') }}">
+@endsection
+
 @section('mw-content')
 <div class="mw-newAuditorium">
     <form id="newAuditorium_form">
@@ -37,6 +41,21 @@
                 </div>
             </div>
 
+            <div class="form_field">
+                <div class="">
+                    Уровень:
+                </div>
+                <div class="">
+                    <select name="level">
+                        @foreach ($levels as $level)
+                            <option value="{{$level->id}}">{{$level->title}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
+
             <div class="form_submit-field">
                 <button type="submit" class="submit-button">Добавить</button>
             </div>
@@ -56,6 +75,60 @@
         <h1>{{$title}}</h1>
         <small>Название площадки</small><br><br>
     </div>
+    <div class="info">
+        <div class="side">
+            <div class="buttons">
+                <a href="{{$place_id}}/protocols">
+                    <div class="download-button">
+                        <div class="download-button__wrapper">
+                            <div class="download-button__image"></div>
+                            <div class="download-button__text">
+                                <span>Протоколы</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+<!--                 <a href="{{$place_id}}/lni">
+                    <div class="download-button">
+                        <div class="download-button__wrapper">
+                            <div class="download-button__image"></div>
+                            <div class="download-button__text">
+                                <span>ЛНИ</span>
+                            </div>
+                        </div>
+                    </div>
+                </a> -->
+
+                <a href="{{$place_id}}/papers">
+                    <div class="download-button">
+                        <div class="download-button__wrapper">
+                            <div class="download-button__image"></div>
+                            <div class="download-button__text">
+                                <span>Работы</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- <a href="notification">Скачать уведомление
+                <a href="notification">Скачать уведомление</a> -->
+                @if ($at == 4)
+                    <a href="{{$place_id}}/ppi_file">
+                        <div class="download-button">
+                            <div class="download-button__wrapper">
+                                <div class="download-button__image"></div>
+                                <div class="download-button__text">
+                                    <span>Файл ППИ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                @endif
+
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -68,13 +141,14 @@
 @if ($address)
 <pre><b>Адрес:</b>			<span>{{$address}}</span></pre>
 @endif
-
+<pre><b>Мест:</b>			<span>{{$places_count}}</span></pre>
 <br><br>
 
 <h1>Аудитории</h1>
+<hr>
 <div class="cards_block">
     @foreach ($auditoriums as $auditorium)
-    <a>
+    <a href="{{$place_id}}/auditorium/{{$auditorium->id}}">
         <div class="card">
             <div class="card_wrapper">
                 <h1>{{$auditorium->title}}</h1>
@@ -94,6 +168,31 @@
     </div>
 </div>
 
+<br><br>
+
+<h1>Участники</h1>
+<hr>
+
+<table class="experts_table">
+	<thead>
+		<tr>
+			<th style="width: 5%">№</th>
+			<th style="width: 55%">ФИО</th>
+            <th style="width: 35%">E-mail</th>
+            <th style="width: 5%"></th>
+		</tr>
+	</thead>
+	<tbody>
+        @foreach ($members as $index => $member)
+    		<tr>
+    			<td>{{$index + 1}}</td>
+    			<td>{{$member->last_name}} {{$member->first_name}} {{$member->middle_name}}</td>
+                <td>{{$member->email}}</td>
+                <td>X</td>
+    		</tr>
+        @endforeach
+	</tbody>
+</table>
 
 @endsection
 

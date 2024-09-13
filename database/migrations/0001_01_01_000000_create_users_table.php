@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('email')->unique();
             $table->string('password');
+            $table->boolean('was_absend')->nullable();
+            $table->unsignedSmallInteger('blanks_count')->nullable();
+            $table->unsignedSmallInteger('tasks_count')->nullable();
+            $table->boolean('not_finished')->nullable();
+            $table->string('seat')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

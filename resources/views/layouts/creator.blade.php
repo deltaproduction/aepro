@@ -4,7 +4,7 @@
 
 @section('content')
 
-шапка<hr>
+
 
 @yield('container')
 

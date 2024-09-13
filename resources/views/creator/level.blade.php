@@ -74,6 +74,9 @@
         <div class="card">
             <div class="card_wrapper">
                 <h1>Задание {{$task->number}}</h1>
+                <div>
+                    <p><b>Макс.балл:</b> {{$task->max_rate}}</p>
+                </div>
             </div>
         </div>
     </a>

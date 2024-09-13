@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     editor.session.setMode('ace/mode/latex');
 
     editor.setOptions({
-    fontSize: '16px'
+        fontSize: '16px'
     });
 });
 

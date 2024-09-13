@@ -4,7 +4,6 @@
 
 @section('content')
 
-шапка участника<hr>
 
 @yield('container')
 

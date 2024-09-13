@@ -23,7 +23,6 @@ class Home extends Controller
             ->get()
             ->groupBy('email')
             ->map(function ($groupedExperts) {
-                // Предполагаем, что все записи с одинаковым email имеют одно и то же имя и конкурс
                 $firstExpert = $groupedExperts->first();
 
                 return [
@@ -34,7 +33,7 @@ class Home extends Controller
                         return [
                             'title' => $expert->level->title
                         ];
-                    })->unique('title') // Удаление дубликатов по названию уровня
+                    })->unique('title')
                 ];
             })->values();
 

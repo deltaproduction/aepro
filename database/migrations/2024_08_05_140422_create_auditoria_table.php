@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('columns');
             $table->unsignedBigInteger('contest_id');
             $table->unsignedBigInteger('place_id');
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->timestamps();
         });
     }

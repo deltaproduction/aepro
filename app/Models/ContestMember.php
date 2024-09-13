@@ -10,7 +10,7 @@ class ContestMember extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'contest_id', 'level_id', 'place_id', 'reg_number'
+        'user_id', 'contest_id', 'level_id', 'place_id', 'reg_number', 'school_id', 'school_name', 'option_id', 'end_time', 'absence', 'blanks', 'tasks', 'not_finished'
     ];
 
     public static function generateUniqueRegNumber()
@@ -20,5 +20,10 @@ class ContestMember extends Model
         } while (self::where('reg_number', $number)->exists());
 
         return $number;
+    }
+
+    public function scans()
+    {
+        return $this->hasMany(Scan::class);
     }
 }

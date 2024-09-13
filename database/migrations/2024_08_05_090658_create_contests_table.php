@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string("title");
             $table->string("contest_code");
-            $table->unsignedBigInteger('creator_id');
+            $table->unsignedBigInteger("creator_id");
+            $table->unsignedInteger("application_type");
             $table->timestamps();
         });
     }

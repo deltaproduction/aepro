@@ -1,0 +1,21 @@
+@import url("../download.css");
+
+
+.info .side {
+    display: flex;
+    gap: 60px;
+}
+
+.info .buttons {
+    display: flex;
+    gap: 20px;
+    text-align: center;
+}
+
+.info .buttons a {
+    text-decoration: none;
+}
+
+.header {
+    align-items: center;
+}

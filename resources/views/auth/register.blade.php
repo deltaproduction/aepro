@@ -25,7 +25,7 @@
                                 Фамилия:
                             </div>
                             <div class="">
-                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required  autocomplete="off">
                             </div>
                         </div>
 
@@ -34,7 +34,7 @@
                                 Имя:
                             </div>
                             <div class="">
-                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required  autocomplete="off">
                             </div>
                         </div>
 
@@ -43,7 +43,7 @@
                                 Отчество:
                             </div>
                             <div class="">
-                                <input type="text" id="middle_name" name="middle_name" value="{{ old('middle_name') }}" required>
+                                <input type="text" id="middle_name" name="middle_name" value="{{ old('middle_name') }}" required  autocomplete="off">
                             </div>
                         </div>
 
@@ -52,7 +52,7 @@
                                 E-mail:
                             </div>
                             <div class="">
-                                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                                <input type="email" id="email" name="email" value="{{ old('email') }}" required  autocomplete="off">
                             </div>
                         </div>
 
@@ -61,8 +61,16 @@
                                 Пароль:
                             </div>
                             <div class="">
-                                <input type="password" id="password" name="password" required>
+                                <input type="password" id="password" name="password" required  autocomplete="off">
                             </div>
+                        </div>
+
+                        <div class="form_field checkbox">
+                            <label>
+                              <input type="checkbox" name="pd_accept">
+                              <span class="custom-checkbox"></span>
+                            </label>
+                            Согласен на обработку персональных данных
                         </div>
 
                         <div class="form_submit-field">

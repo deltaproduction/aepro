@@ -26,3 +26,13 @@ span.contest-code {
     border: 1px solid lightgrey;
     font-size: 1.2em;
 }
+
+p.title {
+    margin-top: 0;
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.form_field.school_manual {
+    display: none;
+}

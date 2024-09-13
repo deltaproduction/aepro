@@ -1,0 +1,50 @@
+.download-button {
+    cursor: pointer;
+    position: relative;
+    top: -12px;
+}
+
+.download-button:hover {
+    opacity: .9;
+}
+
+.download-button:active {
+    opacity: .7;
+}
+
+.download-button__image {
+    background: green;
+    width: 30px;
+    height: 30px;
+    padding: 20px;
+}
+
+.download-button__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: .8em;
+}
+
+.download-button__image {
+    background: url("/images/icons/download.svg");
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: .5;
+}
+
+.download-button__text span {
+    color: black;
+    user-select: none;
+}
+
+.info .buttons {
+    display: flex;
+    gap: 20px;
+    text-align: center;
+}
+
+.info .buttons a {
+    text-decoration: none;
+}

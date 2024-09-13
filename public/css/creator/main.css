@@ -1,3 +1,5 @@
+@import url("../download.css");
+
 .contest-code {
     display: flex;
     align-items: center;
@@ -19,4 +21,35 @@
 .contest-code .letter:last-child {
     border-right: 1px solid #bebebe;
     border-radius: 0 5px 5px 0;
+}
+
+.statuses_table {
+    width: 30%;
+}
+
+.file-field {
+    width: 40%;
+}
+
+.info .side {
+    display: flex;
+    gap: 60px;
+}
+
+.info .buttons {
+    display: flex;
+    gap: 20px;
+    text-align: center;
+}
+
+.info .buttons a {
+    text-decoration: none;
+}
+
+.after-sending_information {
+    display: none;
+}
+
+.after-sending_information.show {
+    display: block;
 }

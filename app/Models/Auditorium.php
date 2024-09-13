@@ -9,5 +9,5 @@ class Auditorium extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'rows', 'columns', 'contest_id', 'place_id'];
+    protected $fillable = ['title', 'rows', 'columns', 'contest_id', 'place_id', 'level_id'];
 }

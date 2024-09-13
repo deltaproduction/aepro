@@ -48,6 +48,13 @@ table tbody td {
 	border-top: 1px solid #716561;
 }
 
+br, img, button {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+}
+
 .void-link {
     color: #707070;
 }

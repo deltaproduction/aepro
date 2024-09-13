@@ -23,22 +23,25 @@ class RegisterController extends Controller
             'middle_name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'pd_accept' => 'required|string'
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'middle_name' => $request->middle_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        if ($request->pd_accept == "on") {
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'middle_name' => $request->middle_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        auth()->login($user);
+            auth()->login($user);
 
-        return redirect()->route('home');
+            return redirect()->route('home');
+        }
     }
 }

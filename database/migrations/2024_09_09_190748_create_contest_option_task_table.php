@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('contest_option_task', function (Blueprint $table) {
+            $table->unsignedBigInteger('contest_option_id');
+            $table->unsignedBigInteger('task_prototype_id');
+
+            $table->primary(['contest_option_id', 'task_prototype_id']);
+
+            $table->foreign('contest_option_id')->references('id')->on('contest_options')->onDelete('cascade');
+            $table->foreign('task_prototype_id')->references('id')->on('task_prototypes')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('contest_option_task');
+    }
+};
