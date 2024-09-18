@@ -46,14 +46,14 @@ class GenerateFiles
         $pdf = Pdf::loadView('pdf.protocol', $data);
         $pdf->setPaper('A4', 'landscape');
 
-        $filePath = storage_path("app/public/protocols/{$auditorium->id}.pdf");
+        $filePath = storage_path("app/private/protocols/{$auditorium->id}.pdf");
         $pdf->save($filePath);
 
         $pdf->download("{$auditorium->id}.pdf");
     }
 
     public function generatePDFFromTex($inputPath, $outputPath, $title) {
-        $process = new Process(['pdflatex', '-interaction=nonstopmode', '-output-directory=storage/app/public/options', '-jobname='.$title, $inputPath]);
+        $process = new Process(['pdflatex', '-interaction=nonstopmode', '-output-directory=storage/app/private/options', '-jobname='.$title, $inputPath]);
 
         try {
             $process->mustRun();
@@ -80,7 +80,7 @@ class GenerateFiles
                 $current_pattern = str_replace($search, $task_prototype->task_text, $current_pattern);
             }
 
-            file_put_contents("storage/app/public/texs/{$variantNumber}.tex", $current_pattern);
+            file_put_contents("storage/app/private/texs/{$variantNumber}.tex", $current_pattern);
         }
     }
 
@@ -98,10 +98,10 @@ class GenerateFiles
         $serialized_data = json_encode([$auditorium->id, $data]);
 
         $tmp_file_name = uniqid();
-        $tmp_file_path = "storage/app/public/papers/tmp/{$tmp_file_name}";
+        $tmp_file_path = "storage/app/private/papers/tmp/{$tmp_file_name}";
         file_put_contents($tmp_file_path, $serialized_data);
 
-        $process = new Process(['python3', 'storage/app/public/papers/generate_papers.py', 'storage/app/public/papers/tmp/' . $tmp_file_name]);
+        $process = new Process(['python3', 'storage/app/private/papers/generate_papers.py', 'storage/app/private/papers/tmp/' . $tmp_file_name]);
 
         try {
             $process->mustRun();
@@ -144,7 +144,7 @@ class GenerateFiles
 
         $json = json_encode($pattern);
         
-        file_put_contents(storage_path("app/public/ppis/PPI_{$place->ppi_number}.PPI"), $json);
+        file_put_contents(storage_path("app/private/ppis/PPI_{$place->ppi_number}.PPI"), $json);
     }
 
     public function generateAllPPIFiles($contest) {

@@ -7,8 +7,8 @@
 
 @yield('container')
 
-@endsection
 
+@endsection
 
 @section('dropdown-items')
 <div class="layout-header__info_menu_item logout_item">

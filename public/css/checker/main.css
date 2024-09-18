@@ -1,0 +1,21 @@
+@import url("../creator/task.css");
+
+.message {
+	width: 70%;
+	margin: auto;
+	margin-top: 60px;
+}
+
+
+.message p {
+	line-height: 1.7em;
+}
+
+.message .checkbox {
+	margin-top: 45px;
+	margin-bottom: 45px;
+}
+
+.message .form_submit-field {
+	justify-content: flex-start;
+}

@@ -239,7 +239,7 @@
 
     <div class="cards_block">
         @foreach ($particips as $particip)
-            <a href="contest/{{$particip->contest_id}}/check">
+            <a href="contest/{{$particip->contest_id}}/member">
                 <div class="card">
                     <div class="card_wrapper">
                         <h1>{{$particip->ct}}</h1>
@@ -289,7 +289,7 @@
 
     <div class="cards_block">
         @foreach ($experts as $expert)
-            <a href="contest/">
+            <a href="contest/{{$particip->contest_id}}/check">
                 <div class="card">
                     <div class="card_wrapper">
                         <h1>{{$expert['title']}}</h1>

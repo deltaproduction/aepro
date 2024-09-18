@@ -24,7 +24,7 @@
             <div>
                 <small>Код испытания</small>
                 <div class="contest-code">
-                    @for ($i = 0; $i < 7; $i++)
+                    @for ($i = 0; $i < strlen($contest_code); $i++)
                         <div class="letter">
                             {{$contest_code[$i]}}
                         </div>
@@ -36,7 +36,7 @@
             <div>
                 <small>Регистрационный номер</small>
                 <div class="contest-code">
-                    @for ($i = 0; $i < 9; $i++)
+                    @for ($i = 0; $i < strlen($reg_number); $i++)
                         <div class="letter">
                             {{$reg_number[$i]}}
                         </div>
@@ -57,7 +57,8 @@
                     </div>
                 </a>
 
-                <a href="notification">
+                @if ($at >= 4)
+                <a href="option">
                     <div class="download-button">
                         <div class="download-button__wrapper">
                             <div class="download-button__image"></div>
@@ -67,6 +68,7 @@
                         </div>
                     </div>
                 </a>
+                @endif
 
                 <!-- <a href="notification">Скачать уведомление
                 <a href="notification">Скачать уведомление</a> -->
@@ -88,7 +90,58 @@
 @endif
 <br><br>
 
+<hr><br>
 
+<h1>Информация об участии в испытании</h1>
+<hr>
+
+@if ($auditorium)
+<pre><b>Аудитория:</b>				<span>{{$auditorium}}</span></pre>
+@endif
+
+@if ($seat)
+<pre><b>Место:</b>					<span>{{$seat}}</span></pre>
+@endif
+
+@if ($option)
+<pre><b>Вариант:</b>				<span>{{$option}}</span></pre>
+@endif
+
+@if ($absence)
+<pre><b>Явился:</b>					<span>Нет</span></pre>
+@else
+<pre><b>Явился:</b>					<span>Да</span></pre>
+@endif
+
+@if ($not_finished)
+<pre><b>Завершил работу:</b>		<span>Нет</span></pre>
+@else
+<pre><b>Завершил работу:</b>		<span>Да</span></pre>
+@endif
+
+@if ($end_time)
+<pre><b>Время завершения:</b>		<span>{{$end_time}}</span></pre>
+@endif
+
+@if ($blanks)
+<pre><b>Количество бланков:</b>		<span>{{$blanks}}</span></pre>
+@endif
+
+@if ($tasks)
+<pre><b>Выполнено заданий:</b>		<span>{{$tasks}}</span></pre>
+@endif
+
+
+<br><br>
+
+
+@if ($scans)
+<h1>Сканы работы</h1>
+<hr>
+@foreach ($scans as $scan)
+<a href="/scan/{{$scan->path}}">Лист {{$scan->page_number}}</a><br>
+@endforeach
+@endif
 
 
 @endsection

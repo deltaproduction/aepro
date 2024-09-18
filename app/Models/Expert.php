@@ -12,7 +12,7 @@ class Expert extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'email', 'contest_id', 'level_id'
+        'name', 'email', 'contest_id', 'level_id', 'expert_status'
     ];
 
     public function level()

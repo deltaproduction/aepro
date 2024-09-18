@@ -5,9 +5,13 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Contest\ContestController;
 use App\Http\Controllers\Contest\ContestPaperController;
+use App\Http\Controllers\ExpertController;
+use App\Http\Controllers\FileController;
 
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\CheckContestAffliation;
+use App\Http\Middleware\CheckIfUserIsMember;
+use App\Http\Middleware\CheckIfUserIsChecker;
 
 use App\Http\Controllers\Home;
 
@@ -20,6 +24,9 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])
 Route::post('register', [RegisterController::class, 'register'])
     ->name('register');
 
+Route::post('agree', [ExpertController::class, 'agree'])
+    ->name('agree');
+
 Route::get('contest/{contest_id}', [ContestController::class, 'showContest'])
     ->middleware('auth')
     ->middleware(CheckContestAffliation::class)
@@ -31,8 +38,15 @@ Route::get('contest/{contest_id}/ppi_files', [ContestController::class, 'getPPIF
     ->middleware(CheckContestAffliation::class)
     ->where('contest_id', '[0-9]+');
 
-Route::get('contest/{contest_id}/check', [ContestController::class, 'showContestCheck'])
+Route::get('contest/{contest_id}/member', [ContestController::class, 'showContestMemberCheck'])
     ->middleware('auth')
+    ->middleware(CheckIfUserIsMember::class)
+    ->where('contest_id', '[0-9]+')
+    ->name('contestMemberCheck.show');
+
+Route::get('contest/{contest_id}/check', [ExpertController::class, 'showContestCheck'])
+    ->middleware('auth')
+    ->middleware(CheckIfUserIsChecker::class)
     ->where('contest_id', '[0-9]+')
     ->name('contestCheck.show');
 
@@ -43,6 +57,10 @@ Route::get('contest/{contest_id}/place/{place_id}',
     ->where('contest_id', '[0-9]+')
     ->where('place_id', '[0-9]+')
     ->name('places.show');
+
+Route::get('/scan/{filename}',
+    [FileController::class, 'getScan'])
+    ->middleware('auth');
 
 Route::get('contest/{contest_id}/place/{place_id}/protocols',
     [ContestController::class, 'getProtocolsArchive'])
@@ -144,3 +162,8 @@ Route::get('contest/{contest_id}/notification', [ContestController::class, 'show
     ->middleware('auth')
     ->where('contest_id', '[0-9]+')
     ->name('notification.show');
+
+Route::get('contest/{contest_id}/option', [ContestController::class, 'showOption'])
+    ->middleware('auth')
+    ->where('contest_id', '[0-9]+')
+    ->name('option.show');

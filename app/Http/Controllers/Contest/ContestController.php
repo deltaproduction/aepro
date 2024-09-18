@@ -142,7 +142,7 @@ class ContestController extends Controller
                         ContestMember::create($data);
 
                         return response()->json([
-                            'redirect' => route('contestCheck.show', ['contest_id' => $contest->id])
+                            'redirect' => route('contestCheckMemberCheck.show', ['contest_id' => $contest->id])
                         ]);
                     } else {
                         return response()->json([
@@ -230,14 +230,17 @@ class ContestController extends Controller
         ]);
     }
 
-    public function showContestCheck($contest_id)
+    public function showContestMemberCheck($contest_id)
     {
         $contest = Contest::findOrFail($contest_id);
-        $contestMember = ContestMember::where('contest_id', $contest_id)->first();
+        $contestMember = ContestMember::where('contest_id', $contest_id)->where('user_id', auth()->id())->first();
 
         if ($contestMember) {
             $level = Level::findOrFail($contestMember->level_id);
             $place = Place::findOrFail($contestMember->place_id);
+
+            $auditorium = Auditorium::find($contestMember->auditorium_id);
+            $option = ContestOption::find($contestMember->option_id);
 
             return view('member.contest', [
                 "title" => $contest->title,
@@ -246,13 +249,23 @@ class ContestController extends Controller
                 "address" => $place->address,
                 "place" => $place->title,
                 "locality" => $place->locality,
-                "reg_number" => strval($contestMember->reg_number)
+                "scans" => $contestMember->scans()->get(),
+                "reg_number" => strval($contestMember->reg_number),
+                "auditorium" => $auditorium ? $auditorium->title : null,
+                "option" => $option ? $option->variant_number : null,
+                "seat" => $contestMember->seat,
+                "end_time" => $contestMember->end_time,
+                "absence" => $contestMember->absence,
+                "blanks" => $contestMember->blanks,
+                "tasks" => $contestMember->tasks,
+                "not_finished" => $contestMember->not_finished,
+                "at" => $contestMember->application_type
             ]);
         } else {
             abort(404);
         }
     }
-
+    
     public function showPlace($contest_id, $place_id)
     {
         $place = Place::findOrFail($place_id);
@@ -317,8 +330,8 @@ class ContestController extends Controller
                 "place_title" => $place->title,
                 "members" => $members,
                 "auditorium_id" => $auditorium->id,
-                "showProtocolDownloadButton" => boolval(File::exists(storage_path("app/public/protocols/{$auditorium->id}.pdf"))),
-                "showPapersDownloadButton" => boolval(File::exists(storage_path("app/public/papers/pdfs/{$auditorium->id}.pdf"))),
+                "showProtocolDownloadButton" => boolval(File::exists(storage_path("app/private/protocols/{$auditorium->id}.pdf"))),
+                "showPapersDownloadButton" => boolval(File::exists(storage_path("app/private/papers/pdfs/{$auditorium->id}.pdf"))),
             ]);
 
         } else {
@@ -408,7 +421,7 @@ class ContestController extends Controller
         $user = auth()->user();
         $contest = Contest::findOrFail($contest_id);
         $contestCreator = User::findOrFail($contest->creator_id);
-        $contestMember = ContestMember::where('contest_id', $contest_id)->first();
+        $contestMember = ContestMember::where('contest_id', $contest_id)->where('user_id', auth()->id())->first();
         $level = Level::findOrFail($contestMember->level_id);
         $place = Place::findOrFail($contestMember->place_id);
 
@@ -439,6 +452,19 @@ class ContestController extends Controller
 
 
         return $pdf->stream("Уведомление_{$contestMember->reg_number}.pdf", [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="document.pdf"',
+        ]);
+    }
+
+    public function showOption($contest_id) {
+        $user_id = auth()->id();
+        $user = auth()->user();
+
+        $contestMember = ContestMember::where('contest_id', $contest_id)->where('user_id', $user_id)->first();
+        
+
+        return $pdf->stream("Вариант_{$contestMember->reg_number}.pdf", [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="document.pdf"',
         ]);
@@ -960,7 +986,7 @@ class ContestController extends Controller
 
         $instruction = $de_count ? "Необходимо запустить генерацию файлов заново, так как некоторых файлов не хватает. Для этого перейдите на страницу испытания и нажмите на кнопку \"Запустить генерацию файлов\" в разделе \"Управление испытанием\"." : "";
 
-        Storage::disk('local')->put("public/" . $passport_title, "Паспорт архива\n\n\nКоличество файлов: {$e_count}\n{$ne_files_text}\n\nСписок файлов:\n\n{$files_list}\n\n{$ne_files_list}\n{$instruction}");
+        Storage::disk('local')->put("private/" . $passport_title, "Паспорт архива\n\n\nКоличество файлов: {$e_count}\n{$ne_files_text}\n\nСписок файлов:\n\n{$files_list}\n\n{$ne_files_list}\n{$instruction}");
 
         return $passport_title;
     }
@@ -981,7 +1007,7 @@ class ContestController extends Controller
             $doesnt_exist = [];
 
             foreach ($auditoriums as $auditorium) {
-                $path = "app/public/papers/pdfs/{$auditorium->id}.pdf";
+                $path = "app/private/papers/pdfs/{$auditorium->id}.pdf";
                 $newTitle = "Работы_Аудитория_{$auditorium->title}.pdf";
                 if (File::exists(storage_path($path))) {
                     $zip->addFile(storage_path($path), $newTitle);
@@ -992,10 +1018,10 @@ class ContestController extends Controller
             }
 
             $passport_title = $this->createArchivePassport($exist, $doesnt_exist, $contest_id, $place_id);
-            $passport_path = "app/public/{$passport_title}";
+            $passport_path = "app/private/{$passport_title}";
             $zip->addFile(storage_path($passport_path), basename($passport_path));
 
-            File::delete("app/public/" . $passport_title);
+            File::delete("app/private/" . $passport_title);
 
             $zip->close();
         } else {
@@ -1022,7 +1048,7 @@ class ContestController extends Controller
             $doesnt_exist = [];
 
             foreach ($auditoriums as $auditorium) {
-                $path = "app/public/protocols/{$auditorium->id}.pdf";
+                $path = "app/private/protocols/{$auditorium->id}.pdf";
                 $newTitle = "Протокол_Аудитория_{$auditorium->title}.pdf";
                 if (File::exists(storage_path($path))) {
                     $zip->addFile(storage_path($path), $newTitle);
@@ -1033,10 +1059,10 @@ class ContestController extends Controller
             }
 
             $passport_title = $this->createArchivePassport($exist, $doesnt_exist, $contest_id, $place_id);
-            $passport_path = "app/public/{$passport_title}";
+            $passport_path = "app/private/{$passport_title}";
             $zip->addFile(storage_path($passport_path), basename($passport_path));
 
-            File::delete("app/public/" . $passport_title);
+            File::delete("app/private/" . $passport_title);
 
             $zip->close();
         } else {
@@ -1063,7 +1089,7 @@ class ContestController extends Controller
 
             foreach ($places as $place) {
                 $newTitle = "PPI_{$place->ppi_number}.PPI";
-                $path = "app/public/ppis/" . $newTitle;
+                $path = "app/private/ppis/" . $newTitle;
 
                 if (File::exists(storage_path($path))) {
                     $zip->addFile(storage_path($path), $newTitle);
@@ -1085,7 +1111,7 @@ class ContestController extends Controller
     public function getPPIFile($contest_id, $place_id) {
         $place = Place::findOrFail($place_id);
 
-        $path = storage_path("app/public/ppis/PPI_{$place->ppi_number}.PPI");
+        $path = storage_path("app/private/ppis/PPI_{$place->ppi_number}.PPI");
         if (File::exists($path))
             return Response::download($path);
 
@@ -1096,7 +1122,7 @@ class ContestController extends Controller
     public function getProtocol($contest_id, $place_id, $auditorium_id) {
         $auditorium = Auditorium::findOrFail($auditorium_id);
         $auditorium_title = $auditorium->title;
-        $path = storage_path("app/public/protocols/{$auditorium_id}.pdf");
+        $path = storage_path("app/private/protocols/{$auditorium_id}.pdf");
         if (File::exists($path))
             return Response::download($path, "Протокол_Аудитория_{$auditorium_title}.pdf");
 
@@ -1106,7 +1132,7 @@ class ContestController extends Controller
     public function getPapers($contest_id, $place_id, $auditorium_id) {
         $auditorium = Auditorium::findOrFail($auditorium_id);
         $auditorium_title = $auditorium->title;
-        $path = storage_path("app/public/papers/pdfs/{$auditorium_id}.pdf");
+        $path = storage_path("app/private/papers/pdfs/{$auditorium_id}.pdf");
 
         if (File::exists($path))
             return Response::download($path, "Работы_Аудитория_{$auditorium_title}.pdf");
@@ -1129,11 +1155,11 @@ class ContestController extends Controller
             $code = time();
             $fileName = $code . '_' . $file->getClientOriginalName();
 
-            $filePath = storage_path('app/public/tmp/' . $fileName);
-            $file->move(storage_path('app/public/tmp'), $fileName);
+            $filePath = storage_path('app/private/tmp/' . $fileName);
+            $file->move(storage_path('app/private/tmp'), $fileName);
 
             $zip = new ZipArchive;
-            $extractPath = storage_path('app/public/tmp/' . pathinfo($fileName, PATHINFO_FILENAME));
+            $extractPath = storage_path('app/private/tmp/' . pathinfo($fileName, PATHINFO_FILENAME));
 
             if ($zip->open($filePath) === TRUE) {
                 $indexFileDataRaw = $fileContent = $zip->getFromName("INDEX");
@@ -1196,7 +1222,7 @@ class ContestController extends Controller
                     if (strtolower($extension) === 'png') {
                         $fileName = strval($auditorium_id) . "_" . basename($fileNameInArchive);
 
-                        $destinationPath = storage_path('app/public/scans/' . $fileName);
+                        $destinationPath = storage_path('app/private/scans/' . $fileName);
                         rename($extractPath . "/" . $fileNameInArchive, $destinationPath);
 
                         $extractedPaths[] = 'storage/scans/' . $fileName;

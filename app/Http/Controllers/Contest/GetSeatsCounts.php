@@ -146,8 +146,6 @@ class GetSeatsCounts
             }
         }
 
-
-
         return $placesCounts;
 
     }

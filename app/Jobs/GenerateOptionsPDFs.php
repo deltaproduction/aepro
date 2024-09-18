@@ -34,7 +34,7 @@ class GenerateOptionsPDFs implements ShouldQueue
 
     public function handle(): void
     {
-        $outputPath = storage_path('app/public/options/');
+        $outputPath = storage_path('app/private/options/');
 
         $service = new GenerateFiles();
 
@@ -42,10 +42,10 @@ class GenerateOptionsPDFs implements ShouldQueue
 
         foreach ($this->optionsList as $variantNumber => $option) {
             $texPath = "{$variantNumber}.tex";
-            $inputPath = storage_path('app/public/texs/' . $texPath);
+            $inputPath = storage_path('app/private/texs/' . $texPath);
             $service->generatePDFFromTex($inputPath, $outputPath, "{$variantNumber}");
 
-            File::delete("storage/app/public/texs/".$texPath);
+            File::delete("storage/app/private/texs/".$texPath);
         }
         $this->done();
     }
