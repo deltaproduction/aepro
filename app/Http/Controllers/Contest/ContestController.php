@@ -109,7 +109,7 @@ class ContestController extends Controller
             'code' => 'required|numeric|min:0|max:9999999|exists:contests,contest_code',
             'contest_level' => 'required|numeric|exists:levels,id',
             'contest_place' => 'required|numeric|exists:places,id',
-            'school_id' => 'numeric|exists:schools,id',
+            'school_id' => 'numeric|exists:schools,s_id',
             'school_name' => 'string'
         ]);
 
