@@ -425,8 +425,14 @@ class ContestController extends Controller
         $level = Level::findOrFail($contestMember->level_id);
         $place = Place::findOrFail($contestMember->place_id);
 
-        if ($contestMember->school_id)
-            $school = School::findOrFail($contestMember->school_id)->select('short_title')->first()->short_title;
+        if ($contestMember->school_id) {
+            $school = School::where("s_id", $contestMember->school_id)->select('short_title');
+            if ($school) {
+                $school->first()->short_title;
+            } else {
+                $school = null;
+            }
+        }
         else
             $school = null;
 
