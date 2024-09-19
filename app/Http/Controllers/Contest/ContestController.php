@@ -53,7 +53,7 @@ class ContestController extends Controller
         $city_id = $request->input("city_id");
 
         $cities = School::where('city_id', $city_id)
-                ->select('short_title', 'id')
+                ->select('short_title', 's_id')
                 ->distinct()
                 ->get();
 
@@ -265,7 +265,7 @@ class ContestController extends Controller
             abort(404);
         }
     }
-    
+
     public function showPlace($contest_id, $place_id)
     {
         $place = Place::findOrFail($place_id);
@@ -462,7 +462,7 @@ class ContestController extends Controller
         $user = auth()->user();
 
         $contestMember = ContestMember::where('contest_id', $contest_id)->where('user_id', $user_id)->first();
-        
+
 
         return $pdf->stream("Вариант_{$contestMember->reg_number}.pdf", [
             'Content-Type' => 'application/pdf',
@@ -1188,7 +1188,7 @@ class ContestController extends Controller
                                 }
 
                                 $contestMember->save();
-                            }   
+                            }
                         }
                     } else {
                         $regNumber = $data["REGNUMBER"];

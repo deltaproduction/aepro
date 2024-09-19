@@ -119,7 +119,7 @@ function setSchoolsList(city_id) {
             schoolsMenu.empty();
 
             $.each(schools, function() {
-                schoolsMenu.append($("<option />").val(this["school_id"]).text(this["short_title"]));
+                schoolsMenu.append($("<option />").val(this["s_id"]).text(this["short_title"]));
             });
 
         },
