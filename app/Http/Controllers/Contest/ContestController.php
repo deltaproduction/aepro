@@ -417,7 +417,6 @@ class ContestController extends Controller
 
     public function showNotification($contest_id)
     {
-        $user_id = auth()->id();
         $user = auth()->user();
         $contest = Contest::findOrFail($contest_id);
         $contestCreator = User::findOrFail($contest->creator_id);
@@ -432,9 +431,9 @@ class ContestController extends Controller
             } else {
                 $school = null;
             }
-        }
-        else
+        } else {
             $school = null;
+        }
 
 
         $data = [

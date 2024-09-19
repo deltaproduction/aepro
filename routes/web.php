@@ -160,6 +160,7 @@ Route::get('prototype_data', [ContestController::class, 'getPrototypeData'])->mi
 
 Route::get('contest/{contest_id}/notification', [ContestController::class, 'showNotification'])
     ->middleware('auth')
+    ->middleware(CheckIfUserIsMember::class)
     ->where('contest_id', '[0-9]+')
     ->name('notification.show');
 
