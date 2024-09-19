@@ -142,7 +142,7 @@ class ContestController extends Controller
                         ContestMember::create($data);
 
                         return response()->json([
-                            'redirect' => route('contestCheckMemberCheck.show', ['contest_id' => $contest->id])
+                            'redirect' => route('contestMemberCheck.show', ['contest_id' => $contest->id])
                         ]);
                     } else {
                         return response()->json([
