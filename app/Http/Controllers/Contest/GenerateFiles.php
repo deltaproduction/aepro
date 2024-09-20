@@ -53,7 +53,7 @@ class GenerateFiles
     }
 
     public function generatePDFFromTex($inputPath, $outputPath, $title) {
-        $process = new Process(['pdflatex', '-interaction=nonstopmode', '-output-directory="' . storage_path("app/private/options") . '"', '-jobname="'.$title . '"', '"' . $inputPath . '"']);
+        $process = new Process(['pdflatex -interaction=nonstopmode -output-directory="' . storage_path("app/private/options") . '" -jobname="'.$title . " " . $inputPath . '"']);
 
         try {
             $process->mustRun();
