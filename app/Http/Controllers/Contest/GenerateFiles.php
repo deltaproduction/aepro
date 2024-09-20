@@ -80,7 +80,7 @@ class GenerateFiles
                 $current_pattern = str_replace($search, $task_prototype->task_text, $current_pattern);
             }
 
-            file_put_contents("storage/app/private/texs/{$variantNumber}.tex", $current_pattern);
+            file_put_contents(storage_path("app/private/texs/{$variantNumber}.tex"), $current_pattern);
         }
     }
 
@@ -143,7 +143,7 @@ class GenerateFiles
         }
 
         $json = json_encode($pattern);
-        
+
         file_put_contents(storage_path("app/private/ppis/PPI_{$place->ppi_number}.PPI"), $json);
     }
 
