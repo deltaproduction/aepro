@@ -55,6 +55,14 @@ class GenerateFiles
     public function generatePDFFromTex($inputPath, $outputPath, $title) {
         $process = new Process(['~/pdflatex/bin/x86_64-linux/pdflatex', '-interaction=nonstopmode', '-output-directory=' . storage_path("app/private/options"),  $inputPath]);
 
+        $process = new Process([
+            '/home/o/ocinboca/pdflatex/bin/x86_64-linux/pdflatex',
+            '-interaction=nonstopmode',
+            '-output-directory=' . storage_path('app/private/options'),
+            $inputPath
+        ]);
+
+
         try {
             $process->mustRun();
             \Log::info('PDF generated successfully: ' . $outputPath);
