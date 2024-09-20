@@ -53,13 +53,24 @@ class GenerateFiles
     }
 
     public function generatePDFFromTex($inputPath, $outputPath, $title) {
-        $process = new Process(['echo jorjia']);
+        $descriptorspec = [
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w'],
+        ];
 
-        try {
-            $process->mustRun();
-            \Log::info('PDF generated successfully: ' . $outputPath);
-        } catch (ProcessFailedException $exception) {
-            \Log::error('Error generating PDF: ' . $exception->getMessage());
+        $process = proc_open('echo hello', $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $output = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+
+            $error_output = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+
+            proc_close($process);
+
+            echo "Output: $output\n";
+            echo "Error: $error_output\n";
         }
     }
 
