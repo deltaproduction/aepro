@@ -98,10 +98,10 @@ class GenerateFiles
         $serialized_data = json_encode([$auditorium->id, $data]);
 
         $tmp_file_name = uniqid();
-        $tmp_file_path = "storage/app/private/papers/tmp/{$tmp_file_name}";
+        $tmp_file_path = storage_path("app/private/papers/tmp/{$tmp_file_name}");
         file_put_contents($tmp_file_path, $serialized_data);
 
-        $process = new Process(['python3', 'storage/app/private/papers/generate_papers.py', 'storage/app/private/papers/tmp/' . $tmp_file_name]);
+        $process = new Process(['python3', storage_path("app/private/papers/generate_papers.py"), storage_path('app/private/papers/tmp/' . $tmp_file_name)]);
 
         try {
             $process->mustRun();

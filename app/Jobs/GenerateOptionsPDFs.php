@@ -45,7 +45,7 @@ class GenerateOptionsPDFs implements ShouldQueue
             $inputPath = storage_path('app/private/texs/' . $texPath);
             $service->generatePDFFromTex($inputPath, $outputPath, "{$variantNumber}");
 
-            File::delete("storage/app/private/texs/".$texPath);
+            File::delete(storage_path("app/private/texs/".$texPath));
         }
         $this->done();
     }
