@@ -23,7 +23,7 @@ def draw_background(horizontal, number, output):
 
     image = np.ones((canvas_height, canvas_width, 3), dtype=np.uint8) * 255
 
-    font_path = "storage/app/private/papers/arial.ttf"
+    font_path = "/home/o/ocinboca/ae.delta.com.ru/storage/app/private/papers/arial.ttf"
     font_size = 35
     font = ImageFont.truetype(font_path, font_size)
 
@@ -102,7 +102,7 @@ def assemble(auditorium_id, pdfs):
                 page.show_pdf_page(overlay_position, overlay_pdf, i)
 
     if pages_count:
-        pdf.save(f"storage/app/private/papers/pdfs/{auditorium_id}.pdf")
+        pdf.save(f"/home/o/ocinboca/ae.delta.com.ru/storage/app/private/papers/pdfs/{auditorium_id}.pdf")
     pdf.close()
 
     if os.path.exists(fn):
@@ -120,6 +120,6 @@ if __name__ == "__main__":
         options = {}
         for reg_number in data:
             variant_number = data[reg_number]
-            options[reg_number] = f"storage/app/private/options/{variant_number}.pdf"
+            options[reg_number] = f"/home/o/ocinboca/ae.delta.com.ru/storage/app/private/options/{variant_number}.pdf"
 
         assemble(auditorium_id, options)
