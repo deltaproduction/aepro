@@ -25,7 +25,7 @@ class GenerateFiles
         $contest_members = DB::table('contest_members')
             ->join('users', 'contest_members.user_id', '=', 'users.id')
             ->join('contest_options', 'contest_members.option_id', '=', 'contest_options.id')
-            ->leftJoin('schools', 'contest_members.school_id', '=', 'schools.s_sid')
+            ->leftJoin('schools', 'contest_members.school_id', '=', 'schools.s_id')
             ->where('contest_members.auditorium_id', $auditorium->id)
             ->select('reg_number', 'school_name', 'short_title', 'contest_members.seat as seat', 'contest_options.variant_number as variant')
             ->orderBy('seat')
