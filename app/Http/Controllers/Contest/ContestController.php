@@ -427,7 +427,7 @@ class ContestController extends Controller
         if ($contestMember->school_id) {
             $school = School::where("s_id", $contestMember->school_id)->select('short_title');
             if ($school) {
-                $school->first()->short_title;
+                $school = $school->first()->short_title;
             } else {
                 $school = null;
             }

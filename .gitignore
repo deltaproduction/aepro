@@ -21,3 +21,5 @@ yarn-error.log
 .DS_Store
 TODO.txt
 public_html
+storage/app
+storage/public
