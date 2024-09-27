@@ -1,0 +1,20 @@
+.rate_input {
+    width: 40px;
+    height: 30px;
+    border: 0;
+    border-bottom: 2px solid grey;
+    outline: none;
+    font-family: "inter";
+    font-size: 1em;
+    text-align: right;
+}
+
+table {
+    width: 100%;
+}
+
+.checking-managing_buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+}

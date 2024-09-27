@@ -14,8 +14,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 use Illuminate\Support\Facades\DB;
 
-use Symfony\Component\Process\Process;
-
+use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class GenerateFiles
 {
@@ -158,6 +162,115 @@ class GenerateFiles
 
         foreach ($places as $place) {
             $this->generatePPIFile($place);
+        }
+    }
+
+    public function getLetter($num) {
+        $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $result = "";
+
+        while ($num > 0) {
+            $remainder = ($num - 1) % 26;
+            $result = $alphabet[$remainder] . $result;
+            $num = (int)(($num - 1) / 26);
+        }
+
+        return $result;
+    }
+
+    public function generateXLSXRating($contest_id)
+    {
+        $templatePath = storage_path('app/private/export_rating_template.xlsx');
+
+        $spreadsheet = IOFactory::load($templatePath);
+
+        $firstSheet = $spreadsheet->getSheet(0);
+
+        $contest = Contest::findOrFail($contest_id);
+        $contestCode = $contest->contest_code;
+        $levels = Level::where("contest_id", $contest_id);
+
+        if ($levels->exists()) {
+            foreach ($levels->get() as $i => $level) {
+                $sheet = clone $firstSheet;
+                $sheet->setTitle($level->title);
+
+                $tasks_count = Task::where("level_id", $level->id)->count();
+
+                $spreadsheet->addSheet($sheet);
+                $sheet = $spreadsheet->getSheet($i + 1);
+
+                $contestMembers = ContestMember::where("contest_members.contest_id", $contest->id)
+                    ->where("contest_members.level_id", $level->id);
+
+                if ($contestMembers->exists()) {
+                    for ($j = 0; $j < $tasks_count; $j++) {
+                        $letter = $this->getLetter(7 + $j);
+                        $sheet->getColumnDimension($letter)->setWidth(15);
+                        $sheet->setCellValue("{$letter}2", $j + 1);
+                    }
+
+                    $letter = $this->getLetter(7 + $tasks_count);
+                    $sheet->getColumnDimension($letter)->setWidth(15);
+                    $sheet->setCellValue("{$letter}2", "ИТОГО");
+
+                    $letter = $this->getLetter(7 + $tasks_count + 1);
+                    $sheet->getColumnDimension($letter)->setWidth(15);
+                    $sheet->setCellValue("{$letter}2", "Апелляция");
+
+                    $sheet->setCellValue("A1", "Результаты – «{$contest->title}» – {$level->title}");
+
+                    $contestMembers = $contestMembers
+                        ->join('users', 'users.id', '=', 'contest_members.user_id')
+                        ->join('levels', 'levels.id', '=', 'contest_members.level_id')
+                        ->leftJoin('schools', 'contest_members.school_id', '=', 'schools.s_id')
+                        ->select('contest_members.id', 'last_name', 'school_name', 'short_title', 'first_name', 'middle_name', 'levels.title')
+                        ->withSum('grades', 'final_score')
+                        ->orderBy('grades_sum_final_score', 'desc')
+                        ->get();
+
+                    foreach ($contestMembers as $num => $contestMember) {
+                        $k = $num + 1;
+                        $numeration = $num + 3;
+                        $sheet->getRowDimension("{$numeration}")->setRowHeight(42);
+                        $sheet->setCellValueExplicit("A{$numeration}", "{$k}.", DataType::TYPE_STRING2);
+                        $sheet->setCellValue("B{$numeration}", $contestMember->last_name);
+                        $sheet->setCellValue("C{$numeration}", $contestMember->first_name);
+                        $sheet->setCellValue("D{$numeration}", $contestMember->middle_name);
+                        $sheet->setCellValue("E{$numeration}", $contestMember->school_name ?: $contestMember->short_title);
+                        $sheet->setCellValue("F{$numeration}", $contestMember->title);
+
+                        foreach ($contestMember->grades()->get() as $j => $grade) {
+                            $letter = $this->getLetter(7 + $j);
+                            $sheet->getColumnDimension($letter)->setWidth(15);
+
+                            $sheet->setCellValue("{$letter}{$numeration}", "{$grade->final_score}");
+                        }
+
+                        $letter = $this->getLetter(7 + $j + 1);
+                        $sheet->setCellValue("{$letter}{$numeration}", "{$contestMember->grades()->sum('final_score')}");
+
+                        $letter = $this->getLetter(7 + $j + 2);
+                        $difference = $contestMember->grades()->sum('final_score') - $contestMember->grades()->sum('score');
+                        $sign = $difference > 0 ? "+" : "";
+
+                        $sheet->setCellValueExplicit("{$letter}{$numeration}", "{$sign}{$difference}", DataType::TYPE_STRING2);
+
+                    }
+                }
+            }
+            $spreadsheet->removeSheetByIndex(0);
+
+            $response = new StreamedResponse(function() use ($spreadsheet) {
+                $writer = new Xlsx($spreadsheet);
+                $writer->save('php://output');
+            });
+
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Disposition', "attachment;filename=\"Рейтинг_{$contestCode}.xlsx\"");
+            $response->headers->set('Cache-Control', 'max-age=0');
+
+            return $response;
         }
     }
 }

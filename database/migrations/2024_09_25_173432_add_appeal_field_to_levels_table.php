@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('levels', function (Blueprint $table) {
-            $table->id();
-            $table->string("title");
-            $table->longText("pattern")->nullable();
-            $table->unsignedBigInteger('contest_id');
-            $table->timestamps();
+        Schema::table('levels', function (Blueprint $table) {
+            $table->boolean('appeal')->default(false);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('levels');
+        Schema::table('levels', function (Blueprint $table) {
+            $table->dropColumn('appeal');
+        });
     }
 };

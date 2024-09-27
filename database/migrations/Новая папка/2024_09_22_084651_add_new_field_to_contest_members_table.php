@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('levels', function (Blueprint $table) {
-            $table->id();
-            $table->string("title");
-            $table->longText("pattern")->nullable();
-            $table->unsignedBigInteger('contest_id');
-            $table->timestamps();
+        Schema::table('contest_members', function (Blueprint $table) {
+            $table->foreignId('expert_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -25,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('levels');
+        Schema::table('contest_members', function (Blueprint $table) {
+            $table->dropForeign(['expert_id']);
+            $table->dropColumn('expert_id');
+        });
     }
 };

@@ -5,3 +5,5 @@ import './apply.js';
 import './send_files.js';
 import './start_checking.js';
 import './generate.js';
+import './publish.js';
+import './appeals.js';

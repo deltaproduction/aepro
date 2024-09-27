@@ -24,4 +24,9 @@ class Expert extends Model
     {
         return $this->belongsTo(Contest::class, 'contest_id');
     }
+
+    public function contestMembers()
+    {
+        return $this->hasMany(ContestMember::class);
+    }
 }

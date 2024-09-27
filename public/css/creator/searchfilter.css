@@ -1,0 +1,11 @@
+.search-filter {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.search-filter .search-field {
+    display: flex;
+    gap: 20px;
+}
+

@@ -87,5 +87,4 @@
 @endsection
 
 @section('scripts')
-<script type="module" src="{{ asset('js/creator/contest/place/index.js') }}"></script>
 @endsection

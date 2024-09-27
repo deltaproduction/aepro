@@ -30,13 +30,24 @@
     font-size: 1.4em;
 }
 
+.form_field-big textarea {
+    width: 200%;
+    margin-top: 18px;
+    resize: none;
+    outline: none;
+    border: 1px solid lightgrey;
+    font-family: "Inter", sans-serif;
+    font-size: 1em;
+    padding: 13px;
+}
+
 .form_field select {
     outline: none;
     padding: 5px 8px;
     width: 272px;
     border: 1px solid lightgrey;
     font-size: 1em;
-    font-family: 'inter';
+    font-family: 'inter', serif;
 }
 
 .form_submit-field {

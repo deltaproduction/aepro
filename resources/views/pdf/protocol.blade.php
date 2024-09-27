@@ -226,7 +226,6 @@
 
                             @else
                                 {{$contest_member->short_title}}
-
                             @endif
 
 

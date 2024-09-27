@@ -20,7 +20,7 @@ export function openModalWindow(event) {
 }
 
 export function closeModalWindow(event) {
-    if (!$(event.target).closest('.modal-window_wrapper, .new_contest_item, .new-place, .new-level, .new-auditorium, .new-task, .new-expert_link').length && modalOpened) {
+    if (!$(event.target).closest('.modal-window_wrapper, .new_contest_item, .new-place, .new-level, .new-auditorium, .new-task, .new-expert_link, .select2-results__options, .select2-search').length && modalOpened) {
         $(".modal-window_wrapper").animate({
             marginBottom: "20px"
         }, 100);

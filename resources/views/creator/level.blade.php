@@ -48,6 +48,25 @@
 </div>
 <hr>
 <br>
+
+<h1>Апелляция</h1>
+<hr>
+<br>
+<div class="form_wrapper">
+    @if ($appeal)
+        <div class="form_field">
+            <button class="submit-button stop-appeals">Остановить приём апелляций</button>
+        </div>
+
+    @else
+        <div class="form_field">
+            <button class="submit-button start-appeals">Возобновить приём апелляций</button>
+        </div>
+    @endif
+</div>
+
+<br><br><br>
+
 <h1>Шаблон</h1>
 <hr>
 

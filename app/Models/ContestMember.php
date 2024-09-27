@@ -13,7 +13,7 @@ class ContestMember extends Model
         'user_id', 'contest_id', 'level_id', 'place_id', 'reg_number', 'school_id', 'school_name', 'option_id', 'end_time', 'absence', 'blanks', 'tasks', 'not_finished'
     ];
 
-    public static function generateUniqueRegNumber()
+    public static function generateUniqueRegNumber(): string
     {
         do {
             $number = str_pad(random_int(0, 999999999), 9, '0', STR_PAD_LEFT);
@@ -22,8 +22,23 @@ class ContestMember extends Model
         return $number;
     }
 
-    public function scans()
+    public function scans(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Scan::class);
+    }
+
+    public function expert(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Expert::class);
+    }
+
+    public function grades(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+    public function appeal()
+    {
+        return $this->hasOne(Appeal::class);
     }
 }

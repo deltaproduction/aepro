@@ -152,6 +152,18 @@
                         </div>
                     </a>
                 @endif
+                @if ($at == 5)
+                    <a href="{{$contest_id}}/rating">
+                        <div class="download-button">
+                            <div class="download-button__wrapper">
+                                <div class="list-button__image"></div>
+                                <div class="download-button__text">
+                                    <span>Рейтинг</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -316,7 +328,19 @@
 
 
 @elseif ($at == 5)
-До конца основного этапа остался один шаг – проверка работ. Не волнуйтесь: работы уже распределены по экспертам. Остаётся только ждать :)
+
+@if (!$published)
+            <pre><b>Проверенных работ:</b>		<span>{{$checked_count}}</span><br>
+<b>Осталось проверить:</b>		<span>{{$not_checked_count}}</span></pre>
+
+<div class="form_field">
+    <button class="submit-button publish-results">Опубликовать результаты</button>
+</div>
+@else
+    Результаты опубликованы.
+
+@endif
+
 
 
 @endif
@@ -360,9 +384,79 @@
 
 <h1>Апелляции</h1>
 <hr>
-Список
+<div class="search-filter">
+    <div class="search-field form_field">
+        <div>Уровень:</div>
+        <div>
+            <select id="level">
+                <option value="0">Все уровни</option>
 
-<br><br>
+                @foreach ($levels as $level)
+                    <option value="{{$level->id}}">{{$level->title}}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="search-field form_field">
+        <div>Площадка:</div>
+        <div>
+            <select id="place">
+                <option value="0">Все площадки</option>
+
+                @foreach ($places as $place)
+                    <option value="{{$place->id}}">{{$place->title}}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="search-field form_field">
+        <div>Статус:</div>
+        <div>
+            <select id="considered">
+                <option value="0">Все статусы</option>
+                <option value="1">Рассмотренные</option>
+                <option value="2">Нерассмотренные</option>
+            </select>
+        </div>
+    </div>
+</div>
+<hr><br>
+<table class="appeals_table"
+@if (count($appeals) == 0)
+style="display: none;"
+@endif>
+    <thead>
+    <tr>
+        <th style="width: 5%">№</th>
+        <th style="width: 40%">ФИО</th>
+        <th style="width: 35%">Площадка</th>
+        <th style="width: 15%">Уровень</th>
+        <th style="width: 5%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach ($appeals as $index => $appeal)
+        <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>
+                <a href="{{$contest_id}}/appeal/{{$appeal->id}}">
+                    {{ $appeal->last_name }} {{ $appeal->first_name }} {{ $appeal->middle_name }}
+                </a>
+            </td>
+            <td>{{ $appeal->place }}</td>
+            <td>{{ $appeal->level }}</td>
+            <td>X</td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>
+<div class="not-found_message"
+     @if (count($appeals) != 0)
+         style="display: none;"
+    @endif
+>По заданным критериям апелляций не найдено.</div>
+
+<br><br><br><br><br><br>
 
 @endsection
 

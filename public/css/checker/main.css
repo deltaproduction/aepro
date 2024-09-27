@@ -19,3 +19,42 @@
 .message .form_submit-field {
 	justify-content: flex-start;
 }
+
+.tasks_sidebar-items a {
+    text-decoration: none;
+    color: black;
+}
+
+.tasks_content_wrapper.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tasks_content_wrapper.centered .start-message {
+    line-height: 1.6em;
+    font-size: 1.2em;
+    position: relative;
+    top: -40px;
+}
+
+.rate_input {
+    width: 40px;
+    height: 30px;
+    border: 0;
+    border-bottom: 2px solid grey;
+    outline: none;
+    font-family: "inter";
+    font-size: 1em;
+    text-align: right;
+}
+
+table {
+    width: 100%;
+}
+
+.checking-managing_buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+}

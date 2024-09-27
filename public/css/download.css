@@ -12,13 +12,6 @@
     opacity: .7;
 }
 
-.download-button__image {
-    background: green;
-    width: 30px;
-    height: 30px;
-    padding: 20px;
-}
-
 .download-button__wrapper {
     display: flex;
     flex-direction: column;
@@ -32,6 +25,20 @@
     background-repeat: no-repeat;
     background-position: center;
     opacity: .5;
+    width: 30px;
+    height: 30px;
+    padding: 20px;
+}
+
+.list-button__image {
+    background: url("/images/icons/list.svg");
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: .5;
+    width: 30px;
+    height: 30px;
+    padding: 20px;
 }
 
 .download-button__text span {

@@ -33,7 +33,8 @@ class Home extends Controller
                         return [
                             'title' => $expert->level->title
                         ];
-                    })->unique('title')
+                    })->unique('title'),
+                    'contest_id' => $firstExpert->contest->id
                 ];
             })->values();
 
@@ -44,6 +45,7 @@ class Home extends Controller
             ->select('levels.title as lt', 'contests.title as ct', 'places.title as pt', 'contest_members.contest_id')
             ->where('contest_members.user_id', $user_id)
             ->get();
+
 
         return view('home', [
             "contests" => $contests,

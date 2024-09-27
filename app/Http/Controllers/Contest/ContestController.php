@@ -13,6 +13,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Expert;
 use App\Models\School;
+use App\Models\Appeal;
 use App\Models\Auditorium;
 use App\Models\ContestOption;
 use App\Models\ContestMember;
@@ -21,6 +22,7 @@ use App\Models\TaskPrototype;
 use App\Http\Controllers\Contest\GenerateFiles;
 use App\Http\Controllers\Contest\GetSeatsCounts;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,6 +51,84 @@ class ContestController extends Controller
         ]);
     }
 
+    public function getAppeals(Request $request) {
+        $contest_id = $request->input("contest_id");
+        $level_id = $request->input("level_id");
+        $place_id = $request->input("place_id");
+        $considered = $request->input("considered");
+
+        $contest = Contest::findOrFail($contest_id);
+
+        if ($contest->creator_id == Auth::user()->id) {
+            $appeals = Appeal::join('contest_members', 'contest_members.id', '=', 'appeals.contest_member_id')
+                ->join('users', 'users.id', '=', 'contest_members.user_id')
+                ->join('levels', 'levels.id', '=', 'contest_members.level_id')
+                ->join('places', 'places.id', '=', 'contest_members.place_id')
+                ->where('contest_members.contest_id', $contest_id)
+                ->select('appeals.id', 'users.first_name', 'users.last_name', 'users.middle_name', 'levels.title as level', 'places.title as place');
+
+            if ($level_id != 0)
+                $appeals = $appeals->where('level_id', $level_id);
+
+            if ($place_id != 0)
+                $appeals = $appeals->where('place_id', $place_id);
+
+            if ($considered == 1)
+                $appeals = $appeals->where('changed', 1);
+
+            else if ($considered == 2)
+                $appeals = $appeals->where('changed', 0);
+
+            return response()->json([
+                'appeals' => [
+                    $appeals->get()
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'message' => [
+                'There were not found this contest on this account.'
+            ]
+        ]);
+    }
+
+    public function getResults(Request $request) {
+        $contest_id = $request->input("contest_id");
+        $level_id = $request->input("level_id");
+        $place_id = $request->input("place_id");
+
+        $contest = Contest::findOrFail($contest_id);
+
+        if ($contest->creator_id == Auth::user()->id) {
+            $contestMembers = ContestMember::where("contest_members.contest_id", $contest->id)
+                ->join('users', 'users.id', '=', 'contest_members.user_id')
+                ->join('levels', 'levels.id', '=', 'contest_members.level_id')
+                ->leftJoin('schools', 'contest_members.school_id', '=', 'schools.s_id')
+                ->select('contest_members.id', 'last_name', 'school_name', 'short_title', 'first_name', 'middle_name', 'levels.title')
+                ->withSum('grades', 'final_score')
+                ->orderBy('grades_sum_final_score', 'desc');
+
+            if ($level_id != 0)
+                $contestMembers = $contestMembers->where('contest_members.level_id', $level_id);
+
+            if ($place_id != 0)
+                $contestMembers = $contestMembers->where('contest_members.place_id', $place_id);
+
+            return response()->json([
+                'results' => [
+                    $contestMembers->get()
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'message' => [
+                'There were not found this contest on this account.'
+            ]
+        ]);
+    }
+
     public function getSchools(Request $request) {
         $city_id = $request->input("city_id");
 
@@ -70,10 +150,11 @@ class ContestController extends Controller
             'contest_code' => 'required|numeric|min:0|max:9999999|exists:contests,contest_code'
         ]);
 
-        $contest = Contest::where('contest_code', $validatedData['contest_code'])->first();
+        $contest = Contest::where('contest_code', $validatedData['contest_code']);
         $userId = auth()->id();
 
-        if ($contest) {
+        if ($contest->exists()) {
+            $contest = $contest->first();
             if ($contest->application_type == 1) {
                 if (!ContestMember::where('user_id', $userId)->where('contest_id', $contest->id)->exists()) {
                     $levels = Level::where('contest_id', $contest->id)->select('id', 'title')->get();
@@ -113,10 +194,11 @@ class ContestController extends Controller
             'school_name' => 'string'
         ]);
 
-        $contest = Contest::where('contest_code', $validatedData['code'])->first();
+        $contest = Contest::where('contest_code', $validatedData['code']);
         $userId = auth()->id();
 
-        if ($contest) {
+        if ($contest->exists()) {
+            $contest = $contest->first();
             if ($contest->application_type == 1) {
                 $level = Level::findOrFail($validatedData['contest_level']);
                 $place = Place::findOrFail($validatedData['contest_place']);
@@ -197,7 +279,6 @@ class ContestController extends Controller
     {
         $contest = Contest::findOrFail($contest_id);
 
-
         $title = $contest->title;
         $contest_code = $contest->contest_code;
 
@@ -205,9 +286,18 @@ class ContestController extends Controller
             abort(404);
         }
 
-        $places = Place::where('contest_id', $contest_id)->select('id', 'title', 'locality', 'address')->get();
-        $levels = Level::where('contest_id', $contest_id)->get();
-        $experts = Expert::where('contest_id', $contest_id)->get();
+        $places = Place::where('contest_id', $contest_id)->select('id', 'title', 'locality', 'address');
+        $levels = Level::where('contest_id', $contest_id);
+
+        $appeals = Appeal::join('contest_members', 'contest_members.id', '=', 'appeals.contest_member_id')
+            ->join('users', 'users.id', '=', 'contest_members.user_id')
+            ->join('levels', 'levels.id', '=', 'contest_members.level_id')
+            ->join('places', 'places.id', '=', 'contest_members.place_id')
+            ->where('contest_members.contest_id', $contest_id)
+//            ->where('place_id', $firstPlace->id)
+//            ->where('level_id', $firstLevel->id)
+            ->select('appeals.id', 'users.first_name', 'users.last_name', 'users.middle_name', 'levels.title as level', 'places.title as place', 'places.contest_id')
+            ->get();
 
         $experts = DB::table('experts')
             ->join('levels', 'experts.level_id', '=', 'levels.id')
@@ -215,32 +305,97 @@ class ContestController extends Controller
             ->where('experts.contest_id', $contest_id)
             ->get();
 
+        $checkedCount = ContestMember::has("grades")->where("contest_id", $contest_id)->count();
+        $notCheckedCount = ContestMember::doesntHave("grades")->where("contest_id", $contest_id)->count();
 
         return view('creator.contest', [
             "title" => $title,
             "contest_code" => $contest_code,
             "contest_id" => $contest_id,
-            "places" => $places,
-            "levels" => $levels,
+            "places" => $places->get(),
+            "levels" => $levels->get(),
             "experts" => $experts,
             "at" => $contest->application_type,
+            "published" => $contest->publish,
             "options_status" => $contest->options_status,
             "auditoriums_status" => $contest->auditoriums_status,
-            "protocols_status" => $contest->protocols_status
+            "protocols_status" => $contest->protocols_status,
+            "checked_count" => $checkedCount,
+            "not_checked_count" => $notCheckedCount,
+            "appeals" => $appeals
+        ]);
+    }
+
+    public function showRating($contest_id) {
+        $contest = Contest::findOrFail($contest_id);
+        $levels = Level::where("contest_id", $contest_id);
+        $places = Place::where("contest_id", $contest_id);
+
+        $contestMembers = ContestMember::where("contest_members.contest_id", $contest->id)
+            //->where("contest_members.level_id", $level->id)
+        ;
+
+        $contestMembers = $contestMembers
+            ->join('users', 'users.id', '=', 'contest_members.user_id')
+            ->join('levels', 'levels.id', '=', 'contest_members.level_id')
+            ->leftJoin('schools', 'contest_members.school_id', '=', 'schools.s_id')
+            ->select('contest_members.id', 'last_name', 'school_name', 'short_title', 'first_name', 'middle_name', 'levels.title')
+            ->withSum('grades', 'final_score')
+            ->orderBy('grades_sum_final_score', 'desc');
+
+        if ($levels->exists() and $places->exists()) {
+            return view('creator.rating', [
+                "contest_id" => $contest_id,
+                "contest_title" => $contest->title,
+                "levels" => $levels->get(),
+                "places" => $places->get(),
+                "contest_members" => $contestMembers->get(),
+                "contest_members_count" => $contestMembers->count()
+            ]);
+        }
+    }
+
+    public function showAppeal($contest_id, $appeal_id) {
+        $appeal = Appeal::findOrFail($appeal_id);
+        $contest = Contest::findOrFail($contest_id);
+        $contestMember = ContestMember::findOrFail($appeal->contest_member_id);
+        $user = User::findOrFail($contestMember->user_id);
+
+        $optionId = $contestMember->option_id;
+        $option = ContestOption::findOrFail($optionId);
+
+        return view('creator.appeal', [
+            "contest_id" => $contest_id,
+            "appeal_id" => $appeal_id,
+            "contest_title" => $contest->title,
+            "appeal_title" => "{$user->last_name} {$user->first_name} {$user->middle_name}",
+            "email" => $appeal->email,
+            "phone" => $appeal->phone,
+            "text" => $appeal->text,
+            "scans" => $contestMember->scans()->get(),
+            "tasks" => $option->tasks()
+                ->join('tasks', 'task_prototypes.task_id', '=', 'tasks.id')
+                ->select('tasks.id', 'number', 'task_text', 'task_answer', 'max_rate')
+                ->orderBy('number')
+                ->get(),
+            "c_member" => $contestMember
         ]);
     }
 
     public function showContestMemberCheck($contest_id)
     {
         $contest = Contest::findOrFail($contest_id);
-        $contestMember = ContestMember::where('contest_id', $contest_id)->where('user_id', auth()->id())->first();
+        $contestMember = ContestMember::where('contest_id', $contest_id)->where('user_id', auth()->id());
 
-        if ($contestMember) {
+        if ($contestMember->exists()) {
+            $contestMember = $contestMember->first();
             $level = Level::findOrFail($contestMember->level_id);
             $place = Place::findOrFail($contestMember->place_id);
 
             $auditorium = Auditorium::find($contestMember->auditorium_id);
             $option = ContestOption::find($contestMember->option_id);
+
+            $appeal = $contestMember->appeal();
 
             return view('member.contest', [
                 "title" => $contest->title,
@@ -254,12 +409,17 @@ class ContestController extends Controller
                 "auditorium" => $auditorium ? $auditorium->title : null,
                 "option" => $option ? $option->variant_number : null,
                 "seat" => $contestMember->seat,
+                "c_member_id" => $contestMember->id,
                 "end_time" => $contestMember->end_time,
                 "absence" => $contestMember->absence,
                 "blanks" => $contestMember->blanks,
                 "tasks" => $contestMember->tasks,
+                "grades" => $contestMember->grades()->join('tasks', 'tasks.id', '=', 'grades.task_id')->select("number", "final_score", "max_rate")->orderBy("number")->get(),
                 "not_finished" => $contestMember->not_finished,
-                "at" => $contestMember->application_type
+                "at" => $contestMember->application_type,
+                "publish" => $contest->publish,
+                "appeal" => $appeal->exists() ? $appeal->first() : null,
+                "appeal_allowed" => $level->appeal
             ]);
         } else {
             abort(404);
@@ -357,7 +517,8 @@ class ContestController extends Controller
                 "pattern" => $pattern,
                 "contest_title" => $contest->title,
                 "tasks" => $tasks->get(),
-                "tasks_count" => $tasks->count()
+                "tasks_count" => $tasks->count(),
+                "appeal" => $level->appeal
             ]);
         } else {
             abort(404);
@@ -426,7 +587,7 @@ class ContestController extends Controller
 
         if ($contestMember->school_id) {
             $school = School::where("s_id", $contestMember->school_id)->select('short_title');
-            if ($school) {
+            if ($school->exists()) {
                 $school = $school->first()->short_title;
             } else {
                 $school = null;
@@ -529,7 +690,7 @@ class ContestController extends Controller
         $creatorId = $contest->creator_id;
 
         if ($creatorId == auth()->id()) {
-            if (!Level::where('title', $validatedData['level_title'])->where('contest_id', )->exists()) {
+            if (!Level::where('title', $validatedData['level_title'])->where('contest_id')->exists()) {
                 $level = Level::create([
                     'title' => $validatedData['level_title'],
                     'contest_id' => $validatedData['contest_id']
@@ -809,6 +970,22 @@ class ContestController extends Controller
         }
     }
 
+    public function publishResults(Request $request) {
+        $validatedData = $request->validate([
+            'contest_id' => 'required|integer|exists:contests,id'
+        ]);
+
+        $contest = Contest::findOrFail($validatedData['contest_id']);
+
+        if ($contest->creator_id == auth()->id() && $contest->getPlacesCount()) {
+            $contest->publish = true;
+            $contest->save();
+
+        } else {
+            abort(404);
+        }
+    }
+
     public function startApply(Request $request)
     {
         $validatedData = $request->validate([
@@ -818,8 +995,6 @@ class ContestController extends Controller
         $contest = Contest::findOrFail($validatedData['contest_id']);
         $levels = Level::where('contest_id', $contest->id)->get();
         $places = Place::where('contest_id', $contest->id)->get();
-
-        $at = $contest->application_type;
 
         if ($contest->creator_id == auth()->id() && $contest->getPlacesCount()) {
             if (!$levels->isEmpty() && !$places->isEmpty()) {
@@ -850,6 +1025,42 @@ class ContestController extends Controller
 
         } else {
             abort(404);
+        }
+    }
+
+    public function stopAppeals(Request $request)
+    {
+        $validatedData = $request->validate([
+            'level_id' => 'required|integer|exists:contests,id'
+        ]);
+
+        $levelAffliance = Level::where("levels.id", $validatedData['level_id'])
+            ->join('contests', 'levels.contest_id', '=', 'contests.id')
+            ->where("creator_id", auth()->id());
+
+        if ($levelAffliance->exists()) {
+            $levelAffliance = $levelAffliance->first();
+            $levelAffliance->appeal = 0;
+
+            $levelAffliance->save();
+        }
+    }
+
+    public function startAppeals(Request $request)
+    {
+        $validatedData = $request->validate([
+            'level_id' => 'required|integer|exists:contests,id'
+        ]);
+
+        $levelAffliance = Level::where("levels.id", $validatedData['level_id'])
+            ->join('contests', 'levels.contest_id', '=', 'contests.id')
+            ->where("creator_id", auth()->id());
+
+        if ($levelAffliance->exists()) {
+            $levelAffliance = $levelAffliance->first();
+            $levelAffliance->appeal = 1;
+
+            $levelAffliance->save();
         }
     }
 
@@ -1244,6 +1455,29 @@ class ContestController extends Controller
         }
 
         return response()->json(['allContestMembersCount' => $allContestMembersCount, 'allScansCount' => $allScansCount]);
+    }
+
+    public function sendAppeal(Request $request) {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'phone' => 'required|string',
+            'appeal_text' => 'required|string',
+            'c_member' => 'required|numeric|exists:contest_members,id'
+        ]);
+
+        $contestMember = ContestMember::findOrFail($validated["c_member"]);
+
+        if (!$contestMember->appeal()->exists()) {
+            $appeal = new Appeal([
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'text' => $validated['appeal_text']
+            ]);
+
+            $contestMember->appeal()->save($appeal);
+        }
+
+        return redirect()->back();
     }
 
     public function deleteDirectory($dir)
