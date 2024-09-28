@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contest_member_id')->constrained()->onDelete('cascade');
-            $table->foreignId('task_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('contest_member_id')->nullable();
+            $table->unsignedTinyInteger('task_id')->nullable();
             $table->integer('score');
             $table->timestamps();
         });

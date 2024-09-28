@@ -212,7 +212,7 @@ class ContestController extends Controller
                             'level_id' => $level->id,
                             'place_id' => $place->id,
                             'reg_number' => $regNumber,
-                            'expert_id' => 0
+                            'expert_id' => null
                         ];
 
                         if (isset($validatedData["school_name"]))
