@@ -10,7 +10,7 @@ class ContestMember extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'contest_id', 'level_id', 'place_id', 'reg_number', 'school_id', 'school_name', 'option_id', 'end_time', 'absence', 'blanks', 'tasks', 'not_finished'
+        'user_id', 'contest_id', 'level_id', 'place_id', 'expert_id', 'reg_number', 'school_id', 'school_name', 'option_id', 'end_time', 'absence', 'blanks', 'tasks', 'not_finished'
     ];
 
     public static function generateUniqueRegNumber(): string
