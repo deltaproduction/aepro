@@ -12,6 +12,7 @@ use App\Models\TaskPrototype;
 use App\Models\ContestMember;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
