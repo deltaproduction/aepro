@@ -57,10 +57,12 @@ class GenerateOptionsPDFs implements ShouldQueue
         $contest->save();
     }
 
-    public function failed(\Exception $exception)
+    public function failed($exception)
     {
         $contest = Contest::findOrFail($this->contest_id);
         $contest->options_status = 2;
         $contest->save();
+
+        return json_encode($exception);
     }
 }

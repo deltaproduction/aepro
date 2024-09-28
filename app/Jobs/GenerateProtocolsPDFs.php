@@ -43,10 +43,12 @@ class GenerateProtocolsPDFs implements ShouldQueue
         $contest->save();
     }
 
-    public function failed(\Exception $exception)
+    public function failed($exception)
     {
         $contest = Contest::findOrFail($this->contest_id);
         $contest->protocols_status = 2;
         $contest->save();
+
+        return json_encode($exception);
     }
 }
