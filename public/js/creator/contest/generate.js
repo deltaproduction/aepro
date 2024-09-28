@@ -10,7 +10,7 @@ function makeStartGenerationRequest(formData) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         success: function(response) {
-            //window.location.reload();
+            window.location.reload();
             console.log(response);
         },
         error: function(xhr, status, error) {
