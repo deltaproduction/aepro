@@ -195,7 +195,6 @@ class ContestController extends Controller
         ]);
 
         $contest = Contest::where('contest_code', $validatedData['code']);
-        $userId = auth()->id();
 
         if ($contest->exists()) {
             $contest = $contest->first();
@@ -212,7 +211,8 @@ class ContestController extends Controller
                             'contest_id' => $contest->id,
                             'level_id' => $level->id,
                             'place_id' => $place->id,
-                            'reg_number' => $regNumber
+                            'reg_number' => $regNumber,
+                            'expert_id' => 0
                         ];
 
                         if (isset($validatedData["school_name"]))
