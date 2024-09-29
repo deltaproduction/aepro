@@ -1380,8 +1380,6 @@ class ContestController extends Controller
             if ($zip->open($filePath) === TRUE) {
                 $indexFileDataRaw = $zip->getFromName("INDEX");
                 $indexFileData = json_decode($indexFileDataRaw, true);
-                
-                dd($indexFileDataRaw);
 
                 $firstContestMember = ContestMember::where("reg_number", $indexFileData["0"]["REGNUMBER"])->first();
                 $auditorium_id = $firstContestMember->auditorium_id;
