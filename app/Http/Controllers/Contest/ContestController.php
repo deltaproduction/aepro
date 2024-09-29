@@ -1381,7 +1381,7 @@ class ContestController extends Controller
                 $indexFileDataRaw = $zip->getFromName("INDEX");
                 $indexFileData = json_decode($indexFileDataRaw, true);
                 
-                dd($indexFileData);
+                dd($indexFileDataRaw);
 
                 $firstContestMember = ContestMember::where("reg_number", $indexFileData["0"]["REGNUMBER"])->first();
                 $auditorium_id = $firstContestMember->auditorium_id;
