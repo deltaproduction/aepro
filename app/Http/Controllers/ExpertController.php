@@ -156,7 +156,7 @@ class ExpertController extends Controller
                 ->where("not_finished", 0)
                 ->join('experts', 'experts.level_id', '=', 'contest_members.level_id')
                 ->where("contest_members.contest_id", $validatedData['contest_id'])
-                ->where("contest_members.expert_id", 0)
+                ->where("contest_members.expert_id", null)
                 ->where('experts.email', auth()->user()->email)
                 ->select('contest_members.id', 'contest_members.expert_id', 'contest_members.absence', 'contest_members.not_finished')
                 ->first();
