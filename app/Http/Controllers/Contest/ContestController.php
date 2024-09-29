@@ -1378,8 +1378,10 @@ class ContestController extends Controller
             $extractPath = storage_path('app/private/tmp/' . pathinfo($fileName, PATHINFO_FILENAME));
 
             if ($zip->open($filePath) === TRUE) {
-                $indexFileDataRaw = $fileContent = $zip->getFromName("INDEX");
+                $indexFileDataRaw = $zip->getFromName("INDEX");
                 $indexFileData = json_decode($indexFileDataRaw, true);
+                
+                dd($indexFileData);
 
                 $firstContestMember = ContestMember::where("reg_number", $indexFileData["0"]["REGNUMBER"])->first();
                 $auditorium_id = $firstContestMember->auditorium_id;
