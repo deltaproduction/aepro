@@ -17,14 +17,15 @@ class Home extends Controller
         $user_email = auth()->user()->email;
 
         $contests = Contest::where('creator_id', $user_id)->get();
-
         $experts = Expert::with(['level', 'contest'])
             ->where('email', $user_email)
             ->get()
-            ->groupBy('email')
+            ->groupBy(function ($expert) {
+                return $expert->email . '_' . $expert->contest_id;
+            })
             ->map(function ($groupedExperts) {
                 $firstExpert = $groupedExperts->first();
-
+        
                 return [
                     'name' => $firstExpert->name,
                     'email' => $firstExpert->email,
@@ -33,7 +34,7 @@ class Home extends Controller
                         return [
                             'title' => $expert->level->title
                         ];
-                    })->unique('title'),
+                    })->unique('title')->values(),
                     'contest_id' => $firstExpert->contest->id
                 ];
             })->values();

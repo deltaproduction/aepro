@@ -1,6 +1,7 @@
 .cards_block {
     display: flex;
     gap: 10px;
+    padding: 10px 0;
     overflow-y: auto;
 }
 
@@ -12,8 +13,22 @@
     padding: 20px 30px;
     width: 280px;
     height: 180px;
-    border: 2px solid #000000;
+    border: 1px solid #dfdfdf;
     color: black;
+    border-radius: 18px;
+    box-shadow: 0 3px 10px #eaeaea;
+    transition: .05s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.card:hover {
+    transform: scale(0.98);
+    opacity: .7;
+}
+
+.card:active {
+    transform: scale(0.95);
 }
 
 .card h1 {

@@ -80,6 +80,7 @@
 
 .submit-button:active {
     opacity: .8;
+    transform: scale(0.95);
 }
 
 input[type="checkbox"] {

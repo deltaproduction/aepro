@@ -9,12 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+public function up(): void
+{
+    if (!Schema::hasColumn('contest_members', 'expert_id')) {
         Schema::table('contest_members', function (Blueprint $table) {
             $table->unsignedTinyInteger('expert_id')->nullable();
         });
     }
+}
 
     /**
      * Reverse the migrations.
@@ -27,3 +29,4 @@ return new class extends Migration
         });
     }
 };
+1

@@ -18,7 +18,7 @@ class ExpertController extends Controller
 {
     public function showContestCheck($contest_id) {
         $contest = Contest::findOrFail($contest_id);
-        $expert = Expert::where('email', auth()->user()->email)->first();
+        $expert = Expert::where('email', auth()->user()->email)->where('contest_id', $contest_id)->first();
 
         return view('checker.contest', [
             "contest_id" => $contest_id,
