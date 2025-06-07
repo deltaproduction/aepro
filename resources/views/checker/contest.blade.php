@@ -192,6 +192,8 @@
 
 		<form method="POST" action="{{ route('agree') }}">
 			<input type="checkbox" name="agree_accept">
+            <input type="hidden" name="contest_id" value="{{$contest_id}}">
+            <input type="hidden" name="expert_id" value="{{$expert_id}}">
 			@csrf
 		    <div class="form_field checkbox">
 		        <label>

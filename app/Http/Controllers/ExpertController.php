@@ -62,11 +62,13 @@ class ExpertController extends Controller
 
     public function agree(Request $request) {
         $validatedData = $request->validate([
-            'agree_accept' => 'required|string'
+            'agree_accept' => 'required|string',
+            'contest_id' => 'required|numeric',
+            'expert_id' => 'required|numeric'
         ]);
 
         if ($validatedData["agree_accept"]) {
-            $expert = Expert::where("email", auth()->user()->email)->first();
+            $expert = Expert::where("email", auth()->user()->email)->where("contest_id", $validatedData["contest_id"])->first();
 
             $expert->expert_status = 1;
             $expert->save();
